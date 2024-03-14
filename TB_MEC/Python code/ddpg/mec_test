@@ -1,0 +1,44 @@
+"""This file tests a DDPG model using the mec environment.
+By Yaze Li, University of Arkansas. 06/13/2023 """
+
+from stable_baselines3 import DDPG
+from mec_env import MecTestEnv
+import numpy as np
+from check_mec_env import network, bus_i, bus_c, bus_r, bus_renew
+
+# Create path to record model and training log.
+models_dir = 'models/'
+logdir = 'logs'
+
+model_name = "models/1686365871/90000"
+
+# Test for a single day
+month = 7
+date = 1
+
+# Create environment
+env = MecTestEnv(network, bus_i, bus_c, bus_r, bus_renew, month, date)
+
+# Load the trained agent
+# NOTE: if you have loading issue, you can pass `print_system_info=True`
+# to compare the system on which the model was trained vs the current one
+model = DDPG.load(model_name, env=env)
+
+obs, info = env.reset()
+loc, soc = np.zeros((4,24)), np.zeros((4,24))
+hour = 0
+cost = []
+
+while not env.done:
+    action, _states = model.predict(obs)
+    obs, rewards, dones, info = env.step(action)
+    loc[:,hour] = [env.mecs[b].get_location() for b in range(env.b)]
+    soc[:,hour] = [env.mecs[b].get_soc() for b in range(env.b)]
+    cost.append(rewards)
+    hour += 1
+
+"""
+with open('result.txt','ab') as f:
+    np.savetxt(f,loc)
+    np.savetxt(f,soc)
+"""
