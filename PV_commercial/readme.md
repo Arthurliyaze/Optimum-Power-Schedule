@@ -6,6 +6,7 @@ This folder contains source code of paper [*"Optimum Design of Battery-Assisted 
 - Y. Li and J. Wu, “Optimum integration of solar energy with battery energy storage systems,” IEEE Transactions on Engineering Management, 2020.
 
 **ESS assisted PV system**
+![alt text](https://github.com/Arthurliyaze/Optimum-Power-Schedule/blob/main/PV_commercial/PV_ESS.jpg)
 
 **Files**
 * Files initialed with "LP" are codes of the Mixed Interger Non-linear Programming approach
